@@ -1,6 +1,7 @@
 ################################################################################
 # Trajectory Plot
 ################################################################################
+using Plots
 
 function plot_traj!(model::AbstractGameModel, traj::Algames.Traj; plt=plot())
     plot!(plt, legend=false, aspect_ratio=:equal)

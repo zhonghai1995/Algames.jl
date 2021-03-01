@@ -1,9 +1,14 @@
 ################################################################################
 # Intro Example
 ################################################################################
-using Algames
+include( joinpath(@__DIR__, "..", "src", "Algames.jl") )
+
+
+
+using .Algames
 using StaticArrays
 using LinearAlgebra
+using Plots
 
 T = Float64
 
