@@ -26,6 +26,8 @@ probsize = ProblemSize(N,model) # Structure holding the relevant sizes of the pr
 # Define the objective of each player
 # We use a LQR cost
 Q = [Diagonal(10*ones(SVector{model.ni[i],T})) for i=1:p] # Quadratic state cost
+
+#I want to increase R a little bit
 R = [Diagonal(0.1*ones(SVector{model.mi[i],T})) for i=1:p] # Quadratic control cost
 # Desrired state
 xf = [SVector{model.ni[1],T}([2,+0.4,0,0]),
@@ -37,7 +39,11 @@ uf = [zeros(SVector{model.mi[i],T}) for i=1:p]
 # Objectives of the game
 game_obj = GameObjective(Q,R,xf,uf,N,model)
 radius = 1.0*ones(p)
+
+#What is the meaning of u?
 μ = 5.0*ones(p)
+
+
 add_collision_cost!(game_obj, radius, μ)
 
 # Define the constraints that each player must respect
@@ -53,6 +59,7 @@ add_control_bound!(game_con, u_max, u_min)
 walls = [Wall([0.0,-0.4], [1.0,-0.4], [0.,-1.])]
 add_wall_constraint!(game_con, walls)
 # Add circle constraint
+#we can use circle constraint directly to define the obstacles?
 xc = [1., 2., 3.]
 yc = [1., 2., 3.]
 radius = [0.1, 0.2, 0.3]

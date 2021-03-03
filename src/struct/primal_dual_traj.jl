@@ -13,6 +13,8 @@ function PrimalDualTraj(probsize::ProblemSize, dt::T; f=rand, amplitude=1e-8) wh
     n = probsize.n
     m = probsize.m
     p = probsize.p
+
+    #Figure out how Traj works.
     pr = Traj(n,m,dt,N)
     du = [[amplitude*f(SVector{n,T}) for k=1:N-1] for i=1:p]
     for k = 1:N

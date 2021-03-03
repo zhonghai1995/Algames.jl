@@ -4,12 +4,12 @@
 using Plots
 
 function plot_traj!(model::AbstractGameModel, traj::Algames.Traj; plt=plot())
-    plot!(plt, legend=false, aspect_ratio=:equal)
+    Plots.plot!(plt, legend=false, aspect_ratio=:equal)
     N = length(traj)
     for i = 1:model.p
         xi = [Algames.state(traj[k])[model.pz[i][1]] for k=1:N]
         yi = [Algames.state(traj[k])[model.pz[i][2]] for k=1:N]
-        plot!(xi, yi, label=false)
+        Plots.plot!(xi, yi, label=false)
         scatter!(xi, yi)
     end
     display(plt)

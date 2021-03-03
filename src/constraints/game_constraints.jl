@@ -21,6 +21,8 @@ function GameConstraintValues(probsize::ProblemSize)
 	α_dual = 1.0
 	αx_dual = ones(p)
 	active_set_tolerance = 0.0
+
+	#Figure out how state_conlist works
 	state_conlist = [ConstraintList(n,m,N) for i=1:p]
 	control_conlist = ConstraintList(n,m,N)
 	state_conval = [Vector{TrajectoryOptimization.AbstractConstraintValues}() for i=1:p]

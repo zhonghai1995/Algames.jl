@@ -26,9 +26,13 @@ function GameObjective(Q::Vector{DQ}, R::Vector{DR}, xf::Vector{SVx}, uf::Vector
 		Rf = Diagonal(zeros(SVector{m,T}))
 		xfi = SVector{n,T}(expand_vector(xf[i], model.pz[i], n))
 		ufi = SVector{m,T}(expand_vector(uf[i], model.pu[i], m))
+		#看到这里
+		#We need to some how assign xfi=x_{k-1}, previous stage
 		cost = LQRCost(Qi,Ri,xfi,ufi,checks=false)
 		cost_term = LQRCost(Qi,Rf,xfi,checks=false)
 		obj[i][1] = Objective(cost, cost_term, N)
+		#Note! This LQRCost would return a different object than the previous ones, because now the input is not a diagnaol matrix
+		#Question? why is 1e-10*zeros(m,m)+I? Is it 1e-10*ones(m,m)+I?
 		E[i][1] = Objective([LQRCost(1e-10*ones(n,n)+I, 1e-10*zeros(m,m)+I, zeros(MVector{n,T})) for k=1:N])
 	end
 	return GameObjective(probsize,obj,E)
@@ -73,6 +77,8 @@ function add_collision_cost!(game_obj::GameObjective, radius::AbstractVector{T},
  	for i = 1:p
 		for j ∈ setdiff(1:p,i)
 			obj = Objective(CollisionCost{n,m,T,length(px[i])}(μ[i], radius[i], px[i], px[j]), N)
+
+			#Since the argument for LQRCost is a matrix instead of a diagonal object, LQRCost would return a quadratic cost function
 			E = Objective([LQRCost(1e-10*ones(n,n)+I, 1e-10*zeros(m,m)+I, zeros(MVector{n,T})) for k=1:N])
 			push!(game_obj.obj[i], obj)
 			push!(game_obj.E[i], E)

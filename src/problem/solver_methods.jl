@@ -71,6 +71,7 @@ function inner_iteration(prob::GameProblem, LS_count::Int, k::Int, l::Int)
 	# plot_traj!(prob.model, prob.pdtraj.pr)
 
 	# Residual
+	#Ok, 该明白梯度在哪里计算的！在那里想办法将x_{k-1}代入
 	residual!(prob, prob.pdtraj)
 	opts.regularize ? regularize_residual!(core, opts, prob.pdtraj, prob.pdtraj) : nothing # should do nothing since we regularize around pdtraj
 	record!(prob.stats, prob.core, prob.model, prob.game_con, prob.pdtraj, k)
