@@ -19,6 +19,7 @@ function ProblemSize(N::Int, model::AbstractGameModel)
     n = model.n
     m = model.m
     p = model.p
+    #What is the meaning of S?
     S = n*p*(N-1) + m*(N-1) + n*(N-1)
     return ProblemSize(
         N,

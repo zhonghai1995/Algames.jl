@@ -49,6 +49,8 @@ function cost_gradient!(game_obj::GameObjective, pdtraj::PrimalDualTraj)
 	for i = 1:p
 		n_obj = length(game_obj.E[i])
 		for j = 1:n_obj
+
+			#at TrajectoryOptimization package, file: cost.jl
 			TrajectoryOptimization.cost_gradient!(game_obj.E[i][j], game_obj.obj[i][j], pdtraj.pr, true)
 		end
 	end

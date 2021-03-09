@@ -15,11 +15,13 @@ function residual!(prob::GameProblem{KN,n,m,T,SVd,SVx}, pdtraj::PrimalDualTraj{K
 	game_obj = prob.game_obj
 
 	# Initialization
+	#!!!!注意这里有初始化！
 	prob.core.res .= 0.0
     stamp = VStamp()
 	∇dyn = zeros(MMatrix{n,(n+m),T,n*(n+m)})
 
 	# Cost
+	#After this step, the gradients are already stored in E 
 	cost_gradient!(game_obj, pdtraj)
 	for i = 1:p
 		# State cost

@@ -3,6 +3,8 @@
 ################################################################################
 
 mutable struct NewtonCore{Vr,Vrt,SMj,SVhi,SVvi,SAr,SAj,Sd}
+
+	#What is really a residual vector?
 	res::Vr               # residual vector
 	res_tmp::Vrt          # holds a temporary copy of the residual vector
 	jac::SMj              # residual sparse jacobian

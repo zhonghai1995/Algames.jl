@@ -19,7 +19,7 @@ n = model.n
 m = model.m
 
 # Define the horizon of the problem
-N = 20 # N time steps
+N = 30 # N time steps
 dt = 0.1 # each step lasts 0.1 second
 probsize = ProblemSize(N,model) # Structure holding the relevant sizes of the problem
 
@@ -30,10 +30,18 @@ Q = [Diagonal(10*ones(SVector{model.ni[i],T})) for i=1:p] # Quadratic state cost
 #I want to increase R a little bit
 R = [Diagonal(0.1*ones(SVector{model.mi[i],T})) for i=1:p] # Quadratic control cost
 # Desrired state
-xf = [SVector{model.ni[1],T}([2,+0.4,0,0]),
-      SVector{model.ni[2],T}([2, 0.0,0,0]),
-      SVector{model.ni[3],T}([3,-0.4,0,0]),
-      ]
+#xf = [SVector{model.ni[1],T}([2,+0.4,0,0]),
+#      SVector{model.ni[2],T}([2, 0.0,0,0]),
+#      SVector{model.ni[3],T}([3,-0.4,0,0]),
+#      ]
+xf=[SVector{model.ni[1],T}([0,0,0,0]),
+    SVector{model.ni[2],T}([0,0,0,0]),
+    SVector{model.ni[2],T}([0,0,0,0]),
+    ]
+
+
+
+
 # Desired control
 uf = [zeros(SVector{model.mi[i],T}) for i=1:p]
 # Objectives of the game
@@ -46,6 +54,11 @@ radius = 1.0*ones(p)
 
 add_collision_cost!(game_obj, radius, μ)
 
+
+#Figure out how to add state constraints
+#非常简单，看下 Trajectoryoptimization package的 constraint_list.jl的add_constraint!函数，有介绍
+
+
 # Define the constraints that each player must respect
 game_con = GameConstraintValues(probsize)
 # Add collision avoidance
@@ -55,15 +68,25 @@ add_collision_avoidance!(game_con, radius)
 u_max =  5*ones(SVector{m,T})
 u_min = -5*ones(SVector{m,T})
 add_control_bound!(game_con, u_max, u_min)
+
+#Remove wall constraints
 # Add wall constraint
-walls = [Wall([0.0,-0.4], [1.0,-0.4], [0.,-1.])]
-add_wall_constraint!(game_con, walls)
+#walls = [Wall([0.0,-0.4], [1.0,-0.4], [0.,-1.])]
+#add_wall_constraint!(game_con, walls)
+
 # Add circle constraint
 #we can use circle constraint directly to define the obstacles?
-xc = [1., 2., 3.]
-yc = [1., 2., 3.]
-radius = [0.1, 0.2, 0.3]
-add_circle_constraint!(game_con, xc, yc, radius)
+#xc = [1.,  5.]
+#yc = [1.,  5.]
+#radius = [0.1,  0.3]
+#add_circle_constraint!(game_con, xc, yc, radius)
+
+xg = MVector{model.n,T}([1.0,1.0,0,0,2.0,2.0,0,0,3.0,3.0,0,0])
+    
+
+
+add_goal_constraint!(game_con,xg)
+
 
 # Define the initial state of the system
 x0 = SVector{model.n,T}([

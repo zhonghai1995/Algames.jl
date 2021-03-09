@@ -9,6 +9,7 @@ mutable struct Statistics
 	con_vio::AbstractVector{ControlViolation}
 	sta_vio::AbstractVector{StateViolation}
 	opt_vio::AbstractVector{OptimalityViolation}
+	goal_vio::AbstractVector{StateViolation}
 end
 
 function Statistics()
@@ -18,17 +19,20 @@ function Statistics()
 	con_vio = Vector{ControlViolation}()
 	sta_vio = Vector{StateViolation}()
 	opt_vio = Vector{OptimalityViolation}()
-	return Statistics(iter, outer_iter, dyn_vio, con_vio, sta_vio, opt_vio)
+	goal_vio = Vector{StateViolation}()
+	return Statistics(iter, outer_iter, dyn_vio, con_vio, sta_vio, opt_vio,goal_vio)
 end
 
 function record!(stats::Statistics, dyn_vio::DynamicsViolation,
-	con_vio::ControlViolation, sta_vio::StateViolation, opt_vio::OptimalityViolation, k::Int)
+	con_vio::ControlViolation, sta_vio::StateViolation, opt_vio::OptimalityViolation,goal_vio::StateViolation, k::Int)
 	stats.iter += 1
 	push!(stats.outer_iter, k)
 	push!(stats.dyn_vio, dyn_vio)
 	push!(stats.con_vio, con_vio)
 	push!(stats.sta_vio, sta_vio)
 	push!(stats.opt_vio, opt_vio)
+	push!(stats.opt_vio, opt_vio)
+	push!(stats.goal_vio, goal_vio)
 	return nothing
 end
 
@@ -41,6 +45,7 @@ function record!(stats::Statistics, core::NewtonCore, model::AbstractGameModel,
 	push!(stats.con_vio, control_violation(game_con, pdtraj))
 	push!(stats.sta_vio, state_violation(game_con, pdtraj))
 	push!(stats.opt_vio, optimality_violation(core))
+	push!(stats.goal_vio, goal_violation(game_con, pdtraj))
 	return nothing
 end
 

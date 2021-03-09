@@ -46,6 +46,7 @@ function newton_solve!(prob::GameProblem{KN,n,m,T,SVd,SVx}) where {KN,n,m,T,SVd,
 			prob.stats.dyn_vio[end].max < opts.ϵ_dyn &&
 			prob.stats.con_vio[end].max < opts.ϵ_con &&
 			prob.stats.sta_vio[end].max < opts.ϵ_sta &&
+			prob.stats.goal_vio[end].max < opts.ϵ_sta &&
 			prob.stats.opt_vio[end].max < opts.ϵ_opt)
 			break
 		end
@@ -84,6 +85,8 @@ function inner_iteration(prob::GameProblem, LS_count::Int, k::Int, l::Int)
 	residual_jacobian!(prob)
 	regularize_residual_jacobian!(prob)
 
+
+	#What is core.jac?
 	Δtraj = - \(lu(core.jac), core.res)
 	set_traj!(core, prob.Δpdtraj, Δtraj)
 

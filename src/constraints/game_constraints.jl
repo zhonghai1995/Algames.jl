@@ -11,6 +11,9 @@ mutable struct GameConstraintValues{T}
 	control_conlist::TrajectoryOptimization.AbstractConstraintSet
 	state_conval::Vector{Vector{TrajectoryOptimization.AbstractConstraintValues}}
 	control_conval::Vector{TrajectoryOptimization.AbstractConstraintValues}
+
+	goal_conlist::TrajectoryOptimization.AbstractConstraintSet
+	goal_conval::Vector{TrajectoryOptimization.AbstractConstraintValues}
 end
 
 function GameConstraintValues(probsize::ProblemSize)
@@ -25,11 +28,13 @@ function GameConstraintValues(probsize::ProblemSize)
 	#Figure out how state_conlist works
 	state_conlist = [ConstraintList(n,m,N) for i=1:p]
 	control_conlist = ConstraintList(n,m,N)
+	goal_conlist = ConstraintList(n,m,N)
 	state_conval = [Vector{TrajectoryOptimization.AbstractConstraintValues}() for i=1:p]
 	control_conval = Vector{TrajectoryOptimization.AbstractConstraintValues}()
+	goal_conval = Vector{TrajectoryOptimization.AbstractConstraintValues}()
 	return GameConstraintValues{typeof(α_dual)}(probsize, α_dual, αx_dual,
 		active_set_tolerance, state_conlist,
-		control_conlist, state_conval, control_conval)
+		control_conlist, state_conval, control_conval,goal_conlist,goal_conval)
 end
 
 function set_constraint_params!(game_con::GameConstraintValues, opts::Options)

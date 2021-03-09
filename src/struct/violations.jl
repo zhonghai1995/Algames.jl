@@ -119,3 +119,40 @@ function optimality_violation(core::NewtonCore)
 	o_vio.max = maximum(o_vio.vio)
     return o_vio
 end
+
+
+################################################################################
+# Control Violation
+################################################################################
+
+mutable struct GoalViolation{SVd,T}
+	N::Int
+	vio::SVd
+	max::T
+end
+
+function GoalViolation(N::Int)
+	vio = zeros(N)
+	max = 0.0
+	TYPE = typeof.((vio,max))
+	return StateViolation{TYPE...}(N,vio,max)
+end
+
+function goal_violation(game_con::GameConstraintValues, pdtraj::PrimalDualTraj)
+	N = pdtraj.probsize.N
+	p = pdtraj.probsize.p
+	goal_vio = GoalViolation(N)
+
+
+
+	
+	for conval in game_con.goal_conval
+		TrajectoryOptimization.evaluate!(conval, pdtraj.pr)
+		TrajectoryOptimization.max_violation!(conval)
+		goal_vio.vio[conval.inds] = max.(goal_vio.vio[conval.inds], conval.c_max)
+	end
+
+	goal_vio.max = maximum(goal_vio.vio)
+	println(goal_vio)
+    return goal_vio
+end

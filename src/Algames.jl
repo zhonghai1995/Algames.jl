@@ -68,7 +68,8 @@ export
     jacobian!,
     update_active_set!,
     constraint_jacobian_residual!,
-    constraint_residual!
+    constraint_residual!,
+    add_goal_constraint!
 
 # Core
 export

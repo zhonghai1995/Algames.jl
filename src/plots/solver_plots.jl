@@ -13,6 +13,7 @@ function plot_traj!(model::AbstractGameModel, traj::Algames.Traj; plt=plot())
         scatter!(xi, yi)
     end
     display(plt)
+	savefig("trajectory.png")
     return nothing
 end
 
@@ -46,6 +47,7 @@ function plot_violation!(stats::Statistics; plt=plot(), lw::T=5.0) where {T}
 	plot_epochs!(plt, y_min, y_max, stats.outer_iter)
 
     display(plt)
+	savefig("vio.png")
     return nothing
 end
 
